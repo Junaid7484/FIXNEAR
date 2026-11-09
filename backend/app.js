@@ -87,13 +87,31 @@ app.use(
 // CORS
 // =====================================================
 
+// =====================================================
+// CORS CONFIGURATION
+// =====================================================
+
+const allowedOrigins = [
+  "https://fixnear-two.vercel.app",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: "https://fixnear-r212lzv3u-junaid-6b5d.vercel.app/",
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header (health checks, etc.)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(
+        new Error(`CORS blocked for origin: ${origin}`)
+      );
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  }),
+  })
 );
 
 // =====================================================
